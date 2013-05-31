@@ -11,7 +11,10 @@ defmodule YahooFinance do
 	comma separated string of symbols or a list of symbols.
 
 	To get historical data call get_historical_quotes and either pass a start
-	date and end date or a number of days to go backwards.
+	date and end date.
+
+  You can also get historical data get_historical_quotes_using_days and pass
+  a number of days to go backwards.
 	"""
 
   @default_read_timeout 5000
@@ -91,14 +94,14 @@ defmodule YahooFinance do
 
   defimpl BaseQuote, for: HistoricalQuote do
     def initialize(q, symbol, valarray) do
-      q = q.symbol(String.upcase(symbol))
-      q = q.date(Enum.at(valarray, 0))
-      q = q.open(YahooFinance.to_float(Enum.at(valarray, 1)))
-      q = q.high(YahooFinance.to_float(Enum.at(valarray, 2)))
-      q = q.low(YahooFinance.to_float(Enum.at(valarray, 3)))
-      q = q.close(YahooFinance.to_float(Enum.at(valarray, 4)))
-      q = q.volume(YahooFinance.to_integer(Enum.at(valarray, 5)))
-      q = q.adjClose(YahooFinance.to_float(Enum.at(valarray, 6)))
+      q = q.update(symbol: String.upcase(symbol),
+        date: Enum.at(valarray, 0),
+        open: YahooFinance.to_float(Enum.at(valarray, 1)),
+        high: YahooFinance.to_float(Enum.at(valarray, 2)),
+        low: YahooFinance.to_float(Enum.at(valarray, 3)),
+        close: YahooFinance.to_float(Enum.at(valarray, 4)),
+        volume: YahooFinance.to_integer(Enum.at(valarray, 5)),
+        adjClose: YahooFinance.to_float(Enum.at(valarray, 6)))
       if Enum.count(valarray) >= 8, do: q.recno(YahooFinance.to_integer(Enum.at(valarray, 7))), else: q
     end
 
@@ -112,39 +115,38 @@ defmodule YahooFinance do
   end
 
   defimpl BaseQuote, for: StockQuote do
-    @key_method_map [
-      s: "q.symbol(value)",
-      n: "q.name(value)",
-      l1: "q.lastTrade(value)",
-      d1: "q.date(value)",
-      t1: "q.time(value)",
-      c: "q.change(value)",
-      k2: "q.change(value)",
-      c1: "q.changePoints(YahooFinance.to_float(value))",
-      c6: "q.changePoints(YahooFinance.to_float(value))",
-      p2: "q.changePercent(value)",
-      p: "q.previousClose(YahooFinance.to_float(value))",
-      o: "q.open(YahooFinance.to_float(value))",
-      h: "q.dayHigh(YahooFinance.to_float(value))",
-      g: "q.dayLow(YahooFinance.to_float(value))",
-      v: "q.volume(YahooFinance.to_integer(value))",
-      m: "q.dayRange(value)",
-      m2: "q.dayRange(value)",
-      l: "q.lastTradeWithTime(value)",
-      k1: "q.lastTradeWithTime(value)",
-      t7: "q.tickerTrend(value)",
-      a2: "q.averageDailyVolume(YahooFinance.to_integer(value))",
-      b: "q.bid(YahooFinance.to_float(value))",
-      b3: "q.bid(YahooFinance.to_float(value))",
-      a: "q.ask(YahooFinance.to_float(value))",
-      b2: "q.ask(YahooFinance.to_float(value))",
-      j3: "q.marketCap(YahooFinance.to_float(value))"
-    ]
+
+    defp key_method_map(q, value, :s), do: q.symbol(value)
+    defp key_method_map(q, value, :n), do: q.name(value)
+    defp key_method_map(q, value, :l1), do: q.lastTrade(value)
+    defp key_method_map(q, value, :d1), do: q.date(value)
+    defp key_method_map(q, value, :t1), do: q.time(value)
+    defp key_method_map(q, value, :c), do: q.change(value)
+    defp key_method_map(q, value, :k2), do: q.change(value)
+    defp key_method_map(q, value, :c1), do: q.changePoints(value)
+    defp key_method_map(q, value, :c6), do: q.changePoints(value)
+    defp key_method_map(q, value, :p2), do: q.changePercent(value)
+    defp key_method_map(q, value, :p), do: q.previousClose(value)
+    defp key_method_map(q, value, :o), do: q.open(value)
+    defp key_method_map(q, value, :h), do: q.dayHigh(value)
+    defp key_method_map(q, value, :g), do: q.dayLow(value)
+    defp key_method_map(q, value, :v), do: q.volume(value)
+    defp key_method_map(q, value, :m), do: q.dayRange(value)
+    defp key_method_map(q, value, :m2), do: q.dayRange(value)
+    defp key_method_map(q, value, :l), do: q.lastTradeWithTime(value)
+    defp key_method_map(q, value, :k1), do: q.lastTradeWithTime(value)
+    defp key_method_map(q, value, :t7), do: q.tickerTrend(value)
+    defp key_method_map(q, value, :a2), do: q.averageDailyVolume(value)
+    defp key_method_map(q, value, :b), do: q.bid(value)
+    defp key_method_map(q, value, :b3), do: q.bid(value)
+    defp key_method_map(q, value, :a), do: q.ask(value)
+    defp key_method_map(q, value, :b2), do: q.ask(value)
+    defp key_method_map(q, value, :j3), do: q.marketCap(value)
 
     def initialize(q, keys, valarray) do
       keys |> Enum.zip(valarray) |> Enum.reduce(q, fn { key, value }, q ->
         if value != nil do
-          {q, _} = Code.eval_string(Keyword.get(@key_method_map, key), [q: q, value: value], __ENV__)
+          q = key_method_map(q, value, key)
         end
         q
       end)
@@ -226,7 +228,7 @@ defmodule YahooFinance do
   other HistoricalQuote fields will be filled in. Pass a symbol and the number
   of days to go back for data.
   """
-  def get_historical_quotes(symbol, days, timeout // @default_read_timeout) do
+  def get_historical_quotes_using_days(symbol, days, timeout // @default_read_timeout) do
     end_date = :calendar.local_time
     start_date = :calendar.gregorian_seconds_to_datetime(:calendar.datetime_to_gregorian_seconds(end_date) - days * 86400)
     get_historical_quotes symbol, start_date, end_date, timeout

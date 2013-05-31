@@ -29,7 +29,7 @@ defmodule YahooFinanceTest do
 		assert(q.symbol == "AAPL")
 		assert(q.name == "Apple Inc.")
 
-    	hq = YahooFinance.get_historical_quotes("FB", 8)
+    	hq = YahooFinance.get_historical_quotes_using_days("FB", 8)
     	assert Enum.count(hq) > 0
     	assert Enum.at(hq, 0).symbol == "FB"
     	assert Enum.at(hq, 0).date != nil
