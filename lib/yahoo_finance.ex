@@ -228,7 +228,7 @@ defmodule YahooFinance do
   other HistoricalQuote fields will be filled in. Pass a symbol and the number
   of days to go back for data.
   """
-  def get_historical_quotes_using_days(symbol, days, timeout // @default_read_timeout) do
+  def get_historical_quotes(symbol, days, timeout // @default_read_timeout) when is_number(days) do
     end_date = :calendar.local_time
     start_date = :calendar.gregorian_seconds_to_datetime(:calendar.datetime_to_gregorian_seconds(end_date) - days * 86400)
     get_historical_quotes symbol, start_date, end_date, timeout
@@ -241,7 +241,8 @@ defmodule YahooFinance do
   {{year,month,day}{hour,minute,second}} The time fields are ignored and can be
   zero.
   """
-  def get_historical_quotes(symbol, {{sy,sm,sd},{_,_,_}}, end_date // nil, timeout // @default_read_timeout) do
+  def get_historical_quotes(symbol, start_date, end_date // nil, timeout // @default_read_timeout) do
+    {{sy,sm,sd},{_,_,_}} = start_date
     case end_date do
       nil -> {{ey,em,ed},{_,_,_}} = :calendar.local_time
       _ -> {{ey,em,ed},{_,_,_}} = end_date
