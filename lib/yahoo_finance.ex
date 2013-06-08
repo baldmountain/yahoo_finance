@@ -1,21 +1,21 @@
 defmodule YahooFinance do
-	
-	@moduledoc """
-	YahooFinanace is used to access Yahoo Finance to retrieve Stock quote data.
-	You can retrieve a standard quote, realtime quote or historical data.
+  
+  @moduledoc """
+  YahooFinanace is used to access Yahoo Finance to retrieve Stock quote data.
+  You can retrieve a standard quote, realtime quote or historical data.
 
-	To get standard data call get_standard_quotes and pass a single symbol, a
-	comma separated string of symbols or a list of symbols.
+  To get standard data call get_standard_quotes and pass a single symbol, a
+  comma separated string of symbols or a list of symbols.
 
-	To get a realtime quote call get_realtime_quotes and pass a single symbol, a
-	comma separated string of symbols or a list of symbols.
+  To get a realtime quote call get_realtime_quotes and pass a single symbol, a
+  comma separated string of symbols or a list of symbols.
 
-	To get historical data call get_historical_quotes and either pass a start
-	date and end date.
+  To get historical data call get_historical_quotes and either pass a start
+  date and end date.
 
   You can also get historical data get_historical_quotes_using_days and pass
   a number of days to go backwards.
-	"""
+  """
 
   @default_read_timeout 5000
 
@@ -228,10 +228,10 @@ defmodule YahooFinance do
   other HistoricalQuote fields will be filled in. Pass a symbol and the number
   of days to go back for data.
   """
-  def get_historical_quotes(symbol, days, timeout // @default_read_timeout) when is_number(days) do
+  def get_historical_quotes(:days, symbol, days, timeout // @default_read_timeout) do
     end_date = :calendar.local_time
     start_date = :calendar.gregorian_seconds_to_datetime(:calendar.datetime_to_gregorian_seconds(end_date) - days * 86400)
-    get_historical_quotes symbol, start_date, end_date, timeout
+    get_historical_quotes :dates, symbol, start_date, end_date, timeout
   end
 
   @doc """
@@ -241,11 +241,15 @@ defmodule YahooFinance do
   {{year,month,day}{hour,minute,second}} The time fields are ignored and can be
   zero.
   """
-  def get_historical_quotes(symbol, start_date, end_date // nil, timeout // @default_read_timeout) do
-    {{sy,sm,sd},{_,_,_}} = start_date
+  def get_historical_quotes(:dates, symbol, start_date, end_date // nil, timeout // @default_read_timeout) do
+    cond do
+      {{sy,sm,sd},{_,_,_}} = start_date -> :ok
+      {sy,sm,sd} = start_date -> :ok
+    end
     case end_date do
-      nil -> {{ey,em,ed},{_,_,_}} = :calendar.local_time
-      _ -> {{ey,em,ed},{_,_,_}} = end_date
+      nil -> {ey,em,ed} = :erlang.date
+      {{ey,em,ed},{_,_,_}} -> :ok
+      {ey,em,ed} -> :ok
     end
     query = "http://itable.finance.yahoo.com/table.csv?s=#{symbol}&g=d&a=#{sm-1}&b=#{sd}&c=#{sy}&d=#{em-1}&e=#{ed}&f=#{ey}"
 

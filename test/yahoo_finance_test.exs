@@ -3,49 +3,49 @@ Code.require_file "test_helper.exs", __DIR__
 defmodule YahooFinanceTest do
   use ExUnit.Case
 
-	test "yahoo finance" do
-		q = YahooFinance.get_standard_quotes("FB") |> Enum.at 0
-		assert(q.symbol == "FB")
-		assert(q.name == "Facebook, Inc.")
+  test "yahoo finance" do
+    q = YahooFinance.get_standard_quotes("FB") |> Enum.at 0
+    assert(q.symbol == "FB")
+    assert(q.name == "Facebook, Inc.")
 
-		sq = YahooFinance.get_standard_quotes(["FB", "AAPL"])
-		q = sq |> Enum.at 0
-		assert(q.symbol == "FB")
-		assert(q.name == "Facebook, Inc.")
-		q = sq |> Enum.at 1
-		assert(q.symbol == "AAPL")
-		assert(q.name == "Apple Inc.")
+    sq = YahooFinance.get_standard_quotes(["FB", "AAPL"])
+    q = sq |> Enum.at 0
+    assert(q.symbol == "FB")
+    assert(q.name == "Facebook, Inc.")
+    q = sq |> Enum.at 1
+    assert(q.symbol == "AAPL")
+    assert(q.name == "Apple Inc.")
 
-		YahooFinance.get_realtime_quotes(["FB", "AAPL"])
-		q = YahooFinance.get_realtime_quotes("FB") |> Enum.at 0
-		assert(q.symbol == "FB")
-		assert(q.name == "Facebook, Inc.")
+    YahooFinance.get_realtime_quotes(["FB", "AAPL"])
+    q = YahooFinance.get_realtime_quotes("FB") |> Enum.at 0
+    assert(q.symbol == "FB")
+    assert(q.name == "Facebook, Inc.")
 
-		rq = YahooFinance.get_realtime_quotes(["FB", "AAPL"])
-		q = rq |> Enum.at 0
-		assert(q.symbol == "FB")
-		assert(q.name == "Facebook, Inc.")
-		q = rq |> Enum.at 1
-		assert(q.symbol == "AAPL")
-		assert(q.name == "Apple Inc.")
+    rq = YahooFinance.get_realtime_quotes(["FB", "AAPL"])
+    q = rq |> Enum.at 0
+    assert(q.symbol == "FB")
+    assert(q.name == "Facebook, Inc.")
+    q = rq |> Enum.at 1
+    assert(q.symbol == "AAPL")
+    assert(q.name == "Apple Inc.")
 
-    	hq = YahooFinance.get_historical_quotes("FB", 8, 3000)
-    	assert Enum.count(hq) > 0
-    	assert Enum.at(hq, 0).symbol == "FB"
-    	assert Enum.at(hq, 0).date != nil
-    	assert YahooFinance.BaseQuote.valid? Enum.at(hq, 0)
-	end
+    hq = YahooFinance.get_historical_quotes(:days, "FB", 8, 3000)
+    assert Enum.count(hq) > 0
+    assert Enum.at(hq, 0).symbol == "FB"
+    assert Enum.at(hq, 0).date != nil
+    assert YahooFinance.BaseQuote.valid? Enum.at(hq, 0)
+  end
 
-	test "StockQuote" do
-		vals = CSV.parse(YahooFinance.get("FB", "snl1d1t1cc1p2pohgvmlt7a2ba"))
-		q = YahooFinance.StockQuote.new
-		q = YahooFinance.BaseQuote.initialize(q, YahooFinance.std_keys, Enum.at(vals, 0))
-		assert(q.symbol == "FB")
-		assert(q.name == "Facebook, Inc.")
+  test "StockQuote" do
+    vals = CSV.parse(YahooFinance.get("FB", "snl1d1t1cc1p2pohgvmlt7a2ba"))
+    q = YahooFinance.StockQuote.new
+    q = YahooFinance.BaseQuote.initialize(q, YahooFinance.std_keys, Enum.at(vals, 0))
+    assert(q.symbol == "FB")
+    assert(q.name == "Facebook, Inc.")
     assert YahooFinance.BaseQuote.valid? q
 
-		refute YahooFinance.BaseQuote.valid? YahooFinance.StockQuote.new
-	end
+    refute YahooFinance.BaseQuote.valid? YahooFinance.StockQuote.new
+  end
 
   test "HistoricalQuote" do
     q = YahooFinance.HistoricalQuote.new
