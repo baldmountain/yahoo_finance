@@ -29,7 +29,7 @@ defmodule YahooFinanceTest do
     assert(q.symbol == "AAPL")
     assert(q.name == "Apple Inc.")
 
-    hq = YahooFinance.get_historical_quotes(:days, "FB", 8, 3000)
+    hq = YahooFinance.get_historical_quotes("FB", 8, 3000)
     assert Enum.count(hq) > 0
     assert Enum.at(hq, 0).symbol == "FB"
     assert Enum.at(hq, 0).date != nil
@@ -38,7 +38,7 @@ defmodule YahooFinanceTest do
     end_date = :calendar.local_time
     start_date = :calendar.gregorian_seconds_to_datetime(:calendar.datetime_to_gregorian_seconds(end_date) - 7 * 86400)
 
-    hq = YahooFinance.get_historical_quotes(:dates, "FB", start_date, end_date, 3000)
+    hq = YahooFinance.get_historical_quotes("FB", start_date, end_date, 3000)
     assert Enum.count(hq) > 0
     assert Enum.at(hq, 0).symbol == "FB"
     assert Enum.at(hq, 0).date != nil

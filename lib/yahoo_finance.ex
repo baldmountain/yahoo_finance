@@ -228,10 +228,10 @@ defmodule YahooFinance do
   other HistoricalQuote fields will be filled in. Pass a symbol and the number
   of days to go back for data.
   """
-  def get_historical_quotes(:days, symbol, days, timeout // @default_read_timeout) do
+  def get_historical_quotes(symbol, days, timeout // @default_read_timeout) do
     end_date = :calendar.local_time
     start_date = :calendar.gregorian_seconds_to_datetime(:calendar.datetime_to_gregorian_seconds(end_date) - days * 86400)
-    get_historical_quotes :dates, symbol, start_date, end_date, timeout
+    get_historical_quotes symbol, start_date, end_date, timeout
   end
 
   @doc """
@@ -241,15 +241,14 @@ defmodule YahooFinance do
   {{year,month,day}{hour,minute,second}} The time fields are ignored and can be
   zero.
   """
-  def get_historical_quotes(:dates, symbol, start_date, end_date // nil, timeout // @default_read_timeout) do
+  def get_historical_quotes(symbol, start_date, end_date, timeout // @default_read_timeout) do
     cond do
       {{sy,sm,sd},{_,_,_}} = start_date -> :ok
       {sy,sm,sd} = start_date -> :ok
     end
-    case end_date do
-      nil -> {ey,em,ed} = :erlang.date
-      {{ey,em,ed},{_,_,_}} -> :ok
-      {ey,em,ed} -> :ok
+    cond do
+      {{ey,em,ed},{_,_,_}} = end_date -> :ok
+      {ey,em,ed} = end_date -> :ok
     end
     query = "http://itable.finance.yahoo.com/table.csv?s=#{symbol}&g=d&a=#{sm-1}&b=#{sd}&c=#{sy}&d=#{em-1}&e=#{ed}&f=#{ey}"
 
