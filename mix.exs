@@ -16,6 +16,6 @@ defmodule YahooFinance.Mixfile do
   # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
     [{:httpotion,"0.1.0",[github: "myfreeweb/httpotion"]},
-      {:elixir_csv, "0.0.1", [github: "baldmountain/elixir_csv"]}]
+      {:elixir_csv, "0.1.0", [github: "baldmountain/elixir_csv"]}]
   end
 end
