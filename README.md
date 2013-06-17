@@ -9,5 +9,6 @@ comma separated string of symbols or a list of symbols.
 To get a realtime quote call get_realtime_quotes and pass a single symbol, a
 comma separated string of symbols or a list of symbols.
 
-To get historical data call get_historical_quotes and either pass a start
-date and end date or a number of days to go backwards.
+To get historical data call get_historical_quotes and pass a number of days
+to go backwards. Or, call get_historical_quotes_using_dates and pass a start
+date and an optional end date.
