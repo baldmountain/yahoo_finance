@@ -176,15 +176,16 @@ defmodule YahooFinance do
       true ->
         ""
     end
-    response = cond do
+    {:ok,{{_, status, _},_,content}} = cond do
       size(symbols)  > 0 ->
-        HTTPotion.get("http://download.finance.yahoo.com/d/quotes.csv?s=#{symbols}&f=#{format}&e=.csv", [], [timeout: timeout])
+        :httpc.request 'http://download.finance.yahoo.com/d/quotes.csv?s=#{symbols}&f=#{format}&e=.csv'
+        # HTTPotion.get("http://download.finance.yahoo.com/d/quotes.csv?s=#{symbols}&f=#{format}&e=.csv", [], [timeout: timeout])
       true ->
-        ""
+        {:ok, {404, "", ""}}
     end
-    case response.status_code do
+    case status do
       200 ->
-        String.strip(response.body)
+        String.strip(list_to_binary(content))
       true ->
         ""
     end
@@ -250,12 +251,12 @@ defmodule YahooFinance do
       {{ey,em,ed},{_,_,_}} = end_date -> :ok
       {ey,em,ed} = end_date -> :ok
     end
-    query = "http://itable.finance.yahoo.com/table.csv?s=#{symbol}&g=d&a=#{sm-1}&b=#{sd}&c=#{sy}&d=#{em-1}&e=#{ed}&f=#{ey}"
+    query = 'http://itable.finance.yahoo.com/table.csv?s=#{symbol}&g=d&a=#{sm-1}&b=#{sd}&c=#{sy}&d=#{em-1}&e=#{ed}&f=#{ey}'
 
-    response = HTTPotion.get(query, [], [timeout: timeout])
+    {:ok,{{_, status, _},_,content}} = :httpc.request query
     cond do
-      response.status_code in 200..299 ->
-        response.body
+      status in 200..299 ->
+        list_to_binary(content)
         |> CSV.parse(",", "\"", 1)
         |> Enum.map(fn(row) ->
           YahooFinance.HistoricalQuote.new |> YahooFinance.BaseQuote.initialize symbol, row

@@ -1,3 +1,3 @@
-[ "elixir_csv": {:git,"https://github.com/baldmountain/elixir_csv.git","870587e0403df93b63bfb22aeecf42887ad7688a",[]},
-  "httpotion": {:git,"https://github.com/myfreeweb/httpotion.git","7ed1b298ecbfcf7452291ac640763a100472e66b",[]},
-  "ibrowse": {:git,"https://github.com/cmullaparthi/ibrowse.git","af5eebd9f5d828f893a94ce1767f29d15f67547c",[]} ]
+[ "elixir_csv": {:git,"git://github.com/baldmountain/elixir_csv.git","870587e0403df93b63bfb22aeecf42887ad7688a",[]},
+  "httpotion": {:git,"git://github.com/myfreeweb/httpotion.git","7ed1b298ecbfcf7452291ac640763a100472e66b",[]},
+  "ibrowse": {:git,"git://github.com/cmullaparthi/ibrowse.git","af5eebd9f5d828f893a94ce1767f29d15f67547c",[]} ]
