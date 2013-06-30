@@ -176,12 +176,12 @@ defmodule YahooFinance do
       true ->
         ""
     end
-    {:ok,{{_, status, _},_,content}} = cond do
+    {:ok, {{_,status,_},_,content}} = cond do
       size(symbols)  > 0 ->
-        :httpc.request 'http://download.finance.yahoo.com/d/quotes.csv?s=#{symbols}&f=#{format}&e=.csv'
+        :httpc.request(:get, {'http://download.finance.yahoo.com/d/quotes.csv?s=#{symbols}&f=#{format}&e=.csv', []}, [{:timeout, timeout}], [])
         # HTTPotion.get("http://download.finance.yahoo.com/d/quotes.csv?s=#{symbols}&f=#{format}&e=.csv", [], [timeout: timeout])
       true ->
-        {:ok, {404, "", ""}}
+        {:ok, {{"",404,""}, "", ""}}
     end
     case status do
       200 ->
@@ -253,7 +253,7 @@ defmodule YahooFinance do
     end
     query = 'http://itable.finance.yahoo.com/table.csv?s=#{symbol}&g=d&a=#{sm-1}&b=#{sd}&c=#{sy}&d=#{em-1}&e=#{ed}&f=#{ey}'
 
-    {:ok,{{_, status, _},_,content}} = :httpc.request query
+    {:ok, {{_, status,_},_,content}} = :httpc.request(:get, {query, []}, [{:timeout, timeout}], [])
     cond do
       status in 200..299 ->
         list_to_binary(content)
