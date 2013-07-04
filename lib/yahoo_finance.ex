@@ -40,10 +40,9 @@ defmodule YahooFinance do
     adjClose: 0.0,
     recno: nil
 
-
   defimpl Binary.Chars, for: HistoricalQuote do
     def to_binary(q) do
-      "HistoricalQuote - symbol: #{q.symbol} date: #{q.date} open: #{q.open} high: #{q.high} low: #{q.low} close: #{q.close} volume: #{q.volume} adjClose: #{q.adjClose} recno: #{q.recno}"
+      "HistoricalQuote - symbol: #{q.symbol} date: #{q.date} open: #{float_to_binary(q.open, [decimals: 2])} high: #{float_to_binary(q.high, [decimals: 2])} low: #{float_to_binary(q.low, [decimals: 2])} close: #{float_to_binary(q.close, [decimals: 2])} volume: #{q.volume} adjClose: #{float_to_binary(q.adjClose, [decimals: 2])}"
     end
   end
 
