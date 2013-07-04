@@ -40,6 +40,13 @@ defmodule YahooFinance do
     adjClose: 0.0,
     recno: nil
 
+
+  defimpl Binary.Chars, for: HistoricalQuote do
+    def to_binary(q) do
+      "HistoricalQuote - symbol: #{q.symbol} date: #{q.date} open: #{q.open} high: #{q.high} low: #{q.low} close: #{q.close} volume: #{q.volume} adjClose: #{q.adjClose} recno: #{q.recno}"
+    end
+  end
+
   @doc """
   A record returned by get_standard_quotes or get_realtime_quotes. Not all
   fields are filled in. Only some of the fields are filled in for a real
