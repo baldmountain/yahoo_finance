@@ -43,6 +43,9 @@ defmodule YahooFinanceTest do
     assert Enum.at(hq, 0).symbol == "FB"
     assert Enum.at(hq, 0).date != nil
     assert YahooFinance.BaseQuote.valid? Enum.at(hq, 0)
+
+    hq = Enum.first YahooFinance.get_historical_quotes_using_dates("fb", {2013,7,3}, {2013,7,3})
+    assert to_binary(hq) == "symbol: FB date: 2013-07-03 open: 24.22 high: 24.71 low: 24.15 close: 24.52 volume: 10358900 adjClose: 24.52"
   end
 
   test "StockQuote" do

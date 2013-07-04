@@ -42,7 +42,7 @@ defmodule YahooFinance do
 
   defimpl Binary.Chars, for: HistoricalQuote do
     def to_binary(q) do
-      "HistoricalQuote - symbol: #{q.symbol} date: #{q.date} open: #{float_to_binary(q.open, [decimals: 2])} high: #{float_to_binary(q.high, [decimals: 2])} low: #{float_to_binary(q.low, [decimals: 2])} close: #{float_to_binary(q.close, [decimals: 2])} volume: #{q.volume} adjClose: #{float_to_binary(q.adjClose, [decimals: 2])}"
+      "symbol: #{q.symbol} date: #{q.date} open: #{float_to_binary(q.open, [decimals: 2])} high: #{float_to_binary(q.high, [decimals: 2])} low: #{float_to_binary(q.low, [decimals: 2])} close: #{float_to_binary(q.close, [decimals: 2])} volume: #{q.volume} adjClose: #{float_to_binary(q.adjClose, [decimals: 2])}"
     end
   end
 
@@ -80,7 +80,6 @@ defmodule YahooFinance do
     @doc "functionality for all quote types"
     def initialize(q, hash, valarray)
     def valid?(q)
-    def as_string(q)
   end
 
   def to_float(value) do
@@ -113,10 +112,6 @@ defmodule YahooFinance do
 
     def valid?(q) do
       q.symbol != nil
-    end
-
-    def as_string(q) do
-      "#HistoricalQuote symbol: #{q.symbol}"
     end
   end
 
@@ -163,10 +158,6 @@ defmodule YahooFinance do
         nil -> false
         _ -> q.name != q.symbol
       end
-    end
-
-    def as_string(q) do
-      "#StockQuote symbol: #{q.symbol} name: #{q.name}"
     end
   end
 
@@ -249,13 +240,13 @@ defmodule YahooFinance do
   zero.
   """
   def get_historical_quotes_using_dates(symbol, start_date, end_date, timeout // @default_read_timeout) do
-    cond do
-      {{sy,sm,sd},{_,_,_}} = start_date -> :ok
-      {sy,sm,sd} = start_date -> :ok
+    case tuple_size(start_date) do
+      2 -> {{sy,sm,sd},{_,_,_}} = start_date
+      3 -> {sy,sm,sd} = start_date
     end
-    cond do
-      {{ey,em,ed},{_,_,_}} = end_date -> :ok
-      {ey,em,ed} = end_date -> :ok
+    case tuple_size(start_date) do
+      2 -> {{ey,em,ed},{_,_,_}} = end_date
+      3 -> {ey,em,ed} = end_date
     end
     query = 'http://itable.finance.yahoo.com/table.csv?s=#{symbol}&g=d&a=#{sm-1}&b=#{sd}&c=#{sy}&d=#{em-1}&e=#{ed}&f=#{ey}'
 
