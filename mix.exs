@@ -15,6 +15,7 @@ defmodule YahooFinance.Mixfile do
   # Returns the list of dependencies in the format:
   # { :foobar, "0.1", git: "https://github.com/elixir-lang/foobar.git" }
   defp deps do
-    [{:elixir_csv, "0.1.0", [github: "baldmountain/elixir_csv"]}]
+    [{:elixir_csv, "0.1.0", [github: "baldmountain/elixir_csv"]},
+    {:"elixir-date", "0.1", [github: "alco/elixir-datetime"]}]
   end
 end
