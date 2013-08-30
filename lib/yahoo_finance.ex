@@ -40,8 +40,8 @@ defmodule YahooFinance do
     adjClose: 0.0,
     recno: nil
 
-  defimpl Binary.Chars, for: HistoricalQuote do
-    def to_binary(q) do
+  defimpl String.Chars, for: HistoricalQuote do
+    def to_string(q) do
       "symbol: #{q.symbol} date: #{q.date} open: #{float_to_binary(q.open, [decimals: 2])} high: #{float_to_binary(q.high, [decimals: 2])} low: #{float_to_binary(q.low, [decimals: 2])} close: #{float_to_binary(q.close, [decimals: 2])} volume: #{q.volume} adjClose: #{float_to_binary(q.adjClose, [decimals: 2])}"
     end
   end
@@ -182,7 +182,7 @@ defmodule YahooFinance do
     end
     case status do
       200 ->
-        String.strip(list_to_binary(content))
+        String.strip(String.from_char_list!(content))
       true ->
         ""
     end
@@ -253,7 +253,7 @@ defmodule YahooFinance do
     {:ok, {{_, status,_},_,content}} = :httpc.request(:get, {query, []}, [{:timeout, timeout}], [])
     cond do
       status in 200..299 ->
-        list_to_binary(content)
+        String.from_char_list!(content)
         |> CSV.parse(",", "\"", 1)
         |> Enum.map(fn(row) ->
           YahooFinance.HistoricalQuote.new |> YahooFinance.BaseQuote.initialize symbol, row
