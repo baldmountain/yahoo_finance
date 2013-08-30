@@ -1,5 +1,2 @@
-[ "elixir-date": {:git, "git://github.com/alco/elixir-datetime.git", "39e5b3c80d2cc1ec0ef97bd33c12b1a555f3da2f", []},
-  "elixir-datetime": {:git, "git://github.com/alco/elixir-datetime.git", "39e5b3c80d2cc1ec0ef97bd33c12b1a555f3da2f", []},
-  "elixir_csv": {:git, "git://github.com/baldmountain/elixir_csv.git", "870587e0403df93b63bfb22aeecf42887ad7688a", []},
-  "httpotion": {:git, "git://github.com/myfreeweb/httpotion.git", "7ed1b298ecbfcf7452291ac640763a100472e66b", []},
-  "ibrowse": {:git, "git://github.com/cmullaparthi/ibrowse.git", "af5eebd9f5d828f893a94ce1767f29d15f67547c", []} ]
+[ "elixir-datetime": {:git, "git://github.com/alco/elixir-datetime.git", "3bf50d8667fcb54726c0a901425fd61930f159a9", []},
+  "elixir_csv": {:git, "git://github.com/baldmountain/elixir_csv.git", "4973b88f097b19d0bfe69c364aee15d13082797a", []} ]
