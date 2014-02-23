@@ -1,2 +1,2 @@
-[ "elixir-datetime": {:git, "git://github.com/alco/elixir-datetime.git", "3bf50d8667fcb54726c0a901425fd61930f159a9", []},
-  "elixir_csv": {:git, "git://github.com/baldmountain/elixir_csv.git", "4973b88f097b19d0bfe69c364aee15d13082797a", []} ]
+[ "elixir-datetime": {:git, "git://github.com/bitwalker/elixir-datetime.git", "a0a7f1c820aa4d828de6c57610ece3896cda11b7", []},
+  "elixir_csv": {:git, "git://github.com/baldmountain/elixir_csv.git", "a81baeb487c457ea794710ecda59f4d32a3a9641", []} ]

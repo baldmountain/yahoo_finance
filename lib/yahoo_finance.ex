@@ -164,7 +164,7 @@ defmodule YahooFinance do
   @doc """
   Internal method to get realtime and standard quotes.
   """
-  def get(symbols, format, timeout // @default_read_timeout) do
+  def get(symbols, format, timeout \\ @default_read_timeout) do
     symbols = cond do
       is_list(symbols) ->
         Enum.join(symbols, ",")
@@ -226,7 +226,7 @@ defmodule YahooFinance do
   other HistoricalQuote fields will be filled in. Pass a symbol and the number
   of days to go back for data.
   """
-  def get_historical_quotes(symbol, days, timeout // @default_read_timeout) do
+  def get_historical_quotes(symbol, days, timeout \\ @default_read_timeout) do
     end_date = :calendar.local_time
     start_date = :calendar.gregorian_seconds_to_datetime(:calendar.datetime_to_gregorian_seconds(end_date) - days * 86400)
     get_historical_quotes_using_dates symbol, start_date, end_date, timeout
@@ -239,7 +239,7 @@ defmodule YahooFinance do
   {{year,month,day}{hour,minute,second}} The time fields are ignored and can be
   zero.
   """
-  def get_historical_quotes_using_dates(symbol, start_date, end_date, timeout // @default_read_timeout) do
+  def get_historical_quotes_using_dates(symbol, start_date, end_date, timeout \\ @default_read_timeout) do
     case tuple_size(start_date) do
       2 -> {{sy,sm,sd},{_,_,_}} = start_date
       3 -> {sy,sm,sd} = start_date
